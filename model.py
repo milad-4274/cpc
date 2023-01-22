@@ -12,7 +12,7 @@ class CurrencyPair():
         self.is_dataframe_setted = True
     
     def get_dataframe(self):
-        if self.is_dataframe_setted:
+        if not self.is_dataframe_setted:
             raise RuntimeError("dataframe not setted yet")
         else:
             return self.dataframe
@@ -32,3 +32,6 @@ class CurrencyPair():
 
     def get_file_name(self, suffix="txt"):
         return self.file_name + "." + suffix
+
+    def __repr__(self):
+        return self.code
