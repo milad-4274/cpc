@@ -47,3 +47,15 @@ def get_data_from_fxmarket(file_path, symbol, start_date, end_data, update=False
         with open(data_path,"wb") as f:
             f.write(data)
     return data
+
+
+def resample_timeframe(df, curr_timeframe, new_timeframe):
+    ohlc_dict = {                                                                                                             
+        'open': 'first',                                                                                                    
+        'high': 'max',                                                                                                       
+        'low': 'min',                                                                                                        
+        'close': 'last',
+    }
+
+    new = df.resample(new_timeframe).agg(ohlc_dict)
+    return new

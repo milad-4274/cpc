@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import seaborn as sn
 
-from data import get_data, get_data_from_fxmarket
+from data import get_data, get_data_from_fxmarket, resample_timeframe
 from utils import plot_mean, plot_candle, save_data
 from model import CurrencyPair
 import matplotlib.pyplot as plt
@@ -66,6 +66,9 @@ for cp in currancy_pairs:
 
     cp.set_dataframe(df)
     appended_data.update({cp.code: df.close.values})
+
+    new = resample_timeframe(df,"2s","10s")
+    print("shapeee", df.shape, new.shape)
 
     print(zero_diffs["time"].value_counts())
     print(df.shape)
