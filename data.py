@@ -2,10 +2,12 @@ from pathlib import Path
 import requests
 
 
-def get_data(file_path="eur_usd.txt",url="http://195.248.242.134:8000/candlesticks/candle",symbol="EURUSD"):
-    update_data = False
-    data_path = Path(file_path)
-    if data_path.is_file() and not update_data:
+def get_data(data_dir= "data", file_path="eur_usd.txt",url="http://195.248.242.134:8000/candlesticks/candle",symbol="EURUSD",update=False):
+    data_dir = Path(data_dir)
+    if not data_dir.is_dir():
+        Path.mkdir(data_dir)
+    data_path = data_dir / Path(file_path)
+    if data_path.is_file() and not update:
         with open(data_path, "rb") as f:
             data = f.read()
     else:
@@ -57,5 +59,7 @@ def resample_timeframe(df, curr_timeframe, new_timeframe):
         'close': 'last',
     }
 
-    new = df.resample(new_timeframe).agg(ohlc_dict)
+    new = df.set_index("time").resample(new_timeframe, closed='left', label='left').apply(ohlc_dict)
+    new.insert(0, 'time', new.index)
+    new.reset_index(drop=True)
     return new

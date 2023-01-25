@@ -4,9 +4,10 @@ import pandas as pd
 from bokeh.plotting import figure, show, output_file
 import matplotlib
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
-def plot_candle(df):
+def plot_candle(df, name="candlestick",result_folder="graphs"):
 
 
     inc = df.close > df.open
@@ -22,10 +23,16 @@ def plot_candle(df):
 
     p.segment(df.time, df.high, df.time, df.low, color="black")
     p.vbar(df.time[inc], w, df.open[inc], df.close[inc], fill_color="#D5E1DD", line_color="black")
-    print(df["time"][inc])
+    # print(df["time"][inc])
     p.vbar(df.time[dec], w, df.open[dec], df.close[dec], fill_color="#F2583E", line_color="black")
 
-    output_file("candlestick.html", title="candlestick.py example")
+    dir = Path(result_folder)
+    if not dir.is_dir():
+        Path.mkdir(dir)
+    
+    result_path = dir / Path(name+".html")
+
+    output_file(result_path, title=name)
     show(p)
 
 def plot_mean(df):

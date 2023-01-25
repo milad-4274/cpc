@@ -1,5 +1,9 @@
 
 
+from pathlib import Path
+from io import BytesIO
+
+
 class CurrencyPair():
     def __init__(self,file_name, code, time_frame=2 ) -> None:
         self.file_name = file_name
@@ -16,6 +20,11 @@ class CurrencyPair():
             raise RuntimeError("dataframe not setted yet")
         else:
             return self.dataframe
+
+    def update_timeframe(self, df, time_frame):
+        self.set_dataframe(df)
+        self.time_frame = time_frame
+
     
     def get_time_period(self):
         time_table = {
@@ -31,7 +40,21 @@ class CurrencyPair():
         return time_table[self.time_frame]
 
     def get_file_name(self, suffix="txt"):
-        return self.file_name + "." + suffix
+        return f"{self.file_name}_{self.time_frame}.{suffix}"
 
-    def __repr__(self):
+    def save_data(self, data_dir):
+        data_dir = Path(data_dir)
+        if not data_dir.is_dir():
+            Path.mkdir(data_dir)
+        
+        data_path = data_dir / Path(self.get_file_name())
+        data = self.get_dataframe()
+        with open(data_path,"w") as f:
+            # f.write(data)
+            # f.write(data.to_json())
+            data.apply(lambda x: f.write(x.to_json()), axis=1)
+        
+
+    def __str__(self):
         return self.code
+
