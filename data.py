@@ -8,10 +8,11 @@ def get_data(data_dir= "data", file_path="eur_usd.txt",url="http://195.248.242.1
         Path.mkdir(data_dir)
     data_path = data_dir / Path(file_path)
     if data_path.is_file() and not update:
+        print("reading data locally")
         with open(data_path, "rb") as f:
             data = f.read()
     else:
-
+        print("sending request to getting data")
         params = {
             "symbol":symbol
         }
