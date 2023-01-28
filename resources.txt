@@ -1,0 +1,15 @@
+# granger implementation
+https://towardsdatascience.com/a-quick-introduction-on-granger-causality-testing-for-time-series-analysis-7113dc9420d2
+
+# Serial Correlation in Time Series Analysis
+http://www.quantstart.com/articles/Serial-Correlation-in-Time-Series-Analysis/#:~:text=The%20serial%20correlation%20or%20autocorrelation,k%20%3D%20C%20k%20%CF%83%202%20.
+
+
+# synchrony in time series
+https://towardsdatascience.com/four-ways-to-quantify-synchrony-between-time-series-data-b99136c4a9c9
+codes:
+https://gist.github.com/jcheong0428/4a74f801e770c6fdb08e81a906902832
+
+
+# additional resources
+https://www.aptech.com/blog/introduction-to-granger-causality/
