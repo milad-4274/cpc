@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import seaborn as sn
 
-from data import get_data, get_data_from_fxmarket, resample_timeframe
+from data import get_data, get_data_from_fxmarket, resample_timeframe, pearson_corr, crosscorr_between_two_data, windowed_time_lagged_cc, dtw_corr
 from utils import plot_mean, plot_candle, save_data
 from model import CurrencyPair
 import matplotlib.pyplot as plt
@@ -64,22 +64,34 @@ for cp in currancy_pairs:
     cp.set_dataframe(df)
     appended_data.update({cp.code: df.close.values})
 
-    new = resample_timeframe(df,"2min","1D")
-    cp.update_timeframe(new,1440)
-    cp.save_data(data_dir)
-    print("shapeee", df.shape, new.shape)
+    # new = resample_timeframe(df,"2min","1D")
+    # cp.update_timeframe(new,1440)
+    # cp.save_data(data_dir)
+    # print("shapeee", df.shape, new.shape)
 
     # print(zero_diffs["time"].value_counts())
     # print(df.shape)
-    print(new.head())
-    print(new.columns)
-    plot_candle(df,f"{cp.code}_M2")
-    plot_candle(new,f"{cp.code}_M10")
-    print("#"*30)
+    # print(new.head())
+    # print(new.columns)
+    # plot_candle(df,f"{cp.code}_M2")
+    # plot_candle(new,f"{cp.code}_M10")
+    # print("#"*30)
 
 appended_data = pd.DataFrame(appended_data)
 
 print(appended_data, appended_data.shape)
 
-sn.heatmap(appended_data.corr(), cmap ="YlGnBu",annot=True)
+# sn.heatmap(pearson_corr(appended_data), cmap ="YlGnBu",annot=True)
+# sn.heatmap(pearson_corr(appended_data.diff()), cmap ="YlGnBu",annot=True)
+# crosscorr_between_two_data(appended_data["EURUSD"],appended_data["GBPUSD"],100)
+# windowed_time_lagged_cc(appended_data)
+dtw_corr(appended_data)
+# TODO sn.heatmap(person_corr_stationary(appended_data), cmap= "YlGnBu", annot=True)
+
+
+
+plt.show()
+
+sn.heatmap(pearson_corr(appended_data.diff().dropna()), cmap ="YlGnBu",annot=True)
+
 plt.show()
