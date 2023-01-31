@@ -5,9 +5,9 @@ from io import BytesIO
 
 
 class CurrencyPair():
-    def __init__(self,file_name, code, time_frame=2 ) -> None:
-        self.file_name = file_name
+    def __init__(self,code, time_frame=2 ) -> None:
         self.code = code
+        self.file_name = self.code.lower()[:3] + "_" + self.code.lower()[3:] 
         self.time_frame = time_frame
         self.is_dataframe_setted = False
     

@@ -1,0 +1,21 @@
+user_input:
+  update_data: False
+  currency_pairs: 
+    - EURUSD
+    - GBPUSD
+    - USDCHF
+    - AUDUSD
+    - USDCAD
+    - USDJPY
+  time_frames:
+    - 2
+    - 5
+    - 10
+    - 15
+    - 1h
+    - 1d
+    
+
+pathes:
+  data_path: data
+  graph_path: graphs
