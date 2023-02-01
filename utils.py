@@ -41,3 +41,9 @@ def plot_mean(df):
 
 def save_data(df,name="csv-data",suffix="csv"):
     df.to_csv(name+"."+suffix)
+
+def price_corr(price_data):
+    price_data = price_data.dropna()
+    price_data.reset_index(drop=True)
+    return price_data.corr()
+
