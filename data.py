@@ -56,17 +56,27 @@ def get_data_from_fxmarket(file_path, symbol, start_date, end_data, update=False
     return data
 
 
-def resample_timeframe(df, curr_timeframe, new_timeframe):
-    ohlc_dict = {                                                                                                             
-        'open': 'first',                                                                                                    
-        'high': 'max',                                                                                                       
-        'low': 'min',                                                                                                        
-        'close': 'last',
-    }
-
+def resample_timeframe(df, curr_timeframe, new_timeframe, lower_case=True):
+    if lower_case:
+        ohlc_dict = {                                                                                                             
+            'open': 'first',                                                                                                    
+            'high': 'max',                                                                                                       
+            'low': 'min',                                                                                                        
+            'close': 'last',
+        }
+    else:
+        ohlc_dict = {                                                                                                             
+            'Open': 'first',                                                                                                    
+            'High': 'max',                                                                                                       
+            'Low': 'min',                                                                                                        
+            'Close': 'last',
+        }
+    if "time" not in df.columns:
+        df['time'] = pd.to_datetime(df.index)
     new = df.set_index("time").resample(new_timeframe, closed='left', label='left').apply(ohlc_dict)
     new.insert(0, 'time', new.index)
     new.reset_index(drop=True)
+    
     return new
 
 def pearson_corr(df):

@@ -50,8 +50,6 @@ class CurrencyPair():
         data_path = data_dir / Path(self.get_file_name())
         data = self.get_dataframe()
         with open(data_path,"w") as f:
-            # f.write(data)
-            # f.write(data.to_json())
             data.apply(lambda x: f.write(x.to_json()), axis=1)
         
 
