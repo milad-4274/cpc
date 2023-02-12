@@ -10,8 +10,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 from model import CurrencyPair
-from utils import price_corr
+from utils import price_corr, corr_in_time
 from data import resample_timeframe
+
+from illustration import plot_candles
 
 plt.rcParams['figure.figsize'] = [8.0, 8.0]
 
@@ -38,7 +40,7 @@ for cp in currency_pairs_input:
 
 
 price_data = defaultdict(dict)
-smallest_data = np.inf
+
 
 valid_intervals = ["1m","2m","5m","15m","30m","60m","90m","1h","1d","5d","1wk","1mo","3mo"]
 
@@ -53,18 +55,20 @@ max_available_data = {
     "1d":"1y"
 }
 
+data_graph = False
+
 for i,cp in enumerate(currency_pairs):
 
-    #Download JPYAUD data
+
+    print("_"*100)
     print(cp.code, "___", cp.time_frame)
-    # print(type(cp.time_frame))
     if cp.time_frame in valid_intervals:
         print(cp.time_frame, max_available_data[cp.time_frame])
         period = max_available_data[cp.time_frame]
-        data = yf.download(tickers = cp.code + "=X" ,period =max_available_data[cp.time_frame], interval = cp.time_frame)
+        data = yf.download(tickers = cp.code ,period =max_available_data[cp.time_frame], interval = cp.time_frame)
         
     else:
-        print(cp.time_frame + " is not valid for yahoo finance, creating it")
+        print(cp.time_frame + " is not valid for yahoo finance, creating it ...")
         time_frame = currency_pairs[i-1].time_frame
         print("time frame is ", time_frame)
         period = max_available_data[time_frame]
@@ -77,47 +81,42 @@ for i,cp in enumerate(currency_pairs):
         data = resample_timeframe(data, time_frame, rr, lower_case=False)
         print(f"resampled {data.shape}")
         # continue
+
     if data.empty:
         raise ValueError("data is empty")
 
     data.index = data.index.tz_convert("Asia/Tehran")
-    print(data.head())
-    print(data.tail())
-    # print(data.shape)
-    print(data.columns)
+    print("first row of data")
+    print(data.head(1))
+    print("last row of data")
+    print(data.tail(1))
 
-    smallest_data = data.shape[0] if data.shape[0] < smallest_data else smallest_data
     price_data[cp.time_frame][cp.code] = data["Close"]
 
     cp.set_dataframe(pd.DataFrame(price_data))
 
     # declare figure
-    fig = go.Figure()
+    if data_graph:
+        graph_path = Path(graph_dir) / (cp.code + cp.time_frame + period + ".png")
+        plot_candles(dataframe=data,
+                    currency_pair=cp,
+                    show= False,
+                    write=True,
+                    path= graph_path)
+    
 
-    #Candlestick
-    fig.add_trace(go.Candlestick(x=data.index,
-                    open=data['Open'],
-                    high=data['High'],
-                    low=data['Low'],
-                    close=data['Close'], name = 'market data'))
 
-    # Add titles
-    fig.update_layout(
-        title=cp.code)
 
-    fig.write_image(Path(graph_dir) / (cp.code + cp.time_frame + period + ".png"))
+selected_time_frame = "2m"
 
-    # Show
-    # fig.show()
+sample_data = pd.DataFrame(price_data[selected_time_frame])
+sample_data = sample_data.dropna()
+sample_data.reset_index(drop=True)
 
-print("len ", smallest_data)
-
-# for key, values in price_data.items():
-#     price_data[key] = values[-smallest_data:]
-
-# price_data = pd.DataFrame(price_data)
-# price_data = price_data.dropna()
-# price_data.reset_index(drop=True)
+data_for_one_day = 30 * 24 
+cor_time = corr_in_time([sample_data[currency_pairs_input[0]], sample_data[currency_pairs_input[1]]], data_for_one_day, None)
+print(cor_time)
+cor_time.plot()
 
 
 for tf in price_data:
@@ -129,7 +128,3 @@ for tf in price_data:
     plt.savefig(Path(graph_dir) / (cp_info + ".png"))
     plt.show()
 
-
-# print(price_data.shape)
-# print(price_data.head)
-# print(price_data.corr())

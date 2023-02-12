@@ -1,21 +1,26 @@
 user_input:
   update_data: False
   currency_pairs: 
-    - EURUSD
-    - GBPUSD
-    - USDCHF
-    - AUDUSD
-    - USDCAD
-    - USDJPY
+    # - DX-Y.NYB # dollar index
+    # - GC=F # gold TODO: check for other symbols
+    # - CL=F # oil
+    # - ^GSPC # S&P 500
+    # - ^IXIC # nasdaq
+    - EURUSD=X
+    - GBPUSD=X
+    # - USDCHF
+    # - AUDUSD
+    # - USDCAD
+    # - USDJPY
   time_frames:
     2m: 1mo
-    5m: 1mo
-    10m: 1mo
-    15m: 1mo
-    30m: 1mo
-    1h: 1mo
-    4h: 6mo
-    1d: 1y
+    # 5m: 1mo
+    # 10m: 1mo
+    # 15m: 1mo
+    # 30m: 1mo
+    # 1h: 1mo
+    # 4h: 6mo
+    # 1d: 1y
     
 
 pathes:

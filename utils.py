@@ -47,3 +47,12 @@ def price_corr(price_data):
     price_data.reset_index(drop=True)
     return price_data.corr()
 
+
+def corr_in_time(currencies, number_of_data, column="Close"):
+    if len(currencies) != 2:
+        raise ValueError(f"correlation in time can be calculated only between two currencies, you entered {len(currencies)}")
+
+    if column is None:
+        return currencies[0].rolling(number_of_data).corr(currencies[1])
+    else:
+        return currencies[0][column].rolling(number_of_data).corr(currencies[1][column])
