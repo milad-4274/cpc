@@ -6,12 +6,12 @@ user_input:
     # - CL=F # oil
     # - ^GSPC # S&P 500
     # - ^IXIC # nasdaq
-    - EURUSD=X
+    # - EURUSD=X
     - GBPUSD=X
-    # - USDCHF
-    # - AUDUSD
-    # - USDCAD
-    # - USDJPY
+    - USDCHF=X
+    # - AUDUSD=X
+    # - USDCAD=X
+    # - USDJPY=X
   time_frames:
     2m: 1mo
     # 5m: 1mo

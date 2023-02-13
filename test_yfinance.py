@@ -113,10 +113,15 @@ sample_data = pd.DataFrame(price_data[selected_time_frame])
 sample_data = sample_data.dropna()
 sample_data.reset_index(drop=True)
 
-data_for_one_day = 30 * 24 
-cor_time = corr_in_time([sample_data[currency_pairs_input[0]], sample_data[currency_pairs_input[1]]], data_for_one_day, None)
-print(cor_time)
+number_of_days = 2
+data_per_day = 30 * 24 
+cor_time = corr_in_time([sample_data[currency_pairs_input[0]], sample_data[currency_pairs_input[1]]], data_per_day * number_of_days, None)
+cor_time.dropna(inplace=True)
+print(cor_time.iloc[0])
+print(len(cor_time))
 cor_time.plot()
+plt.show()
+plt.savefig(Path(graph_dir) / "corr_in_time.png")
 
 
 for tf in price_data:
