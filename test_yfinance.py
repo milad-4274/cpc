@@ -28,6 +28,11 @@ time_frames = cfg["user_input"]["time_frames"]
 data_dir = cfg["pathes"]["data_path"]
 graph_dir = cfg["pathes"]["graph_path"]
 
+dirs = [graph_dir, data_dir]
+
+for dir in dirs:
+    Path(dir).mkdir(parents=True, exist_ok=True)
+
 
 currency_pairs = []
 
@@ -120,14 +125,14 @@ cor_time.dropna(inplace=True)
 print(cor_time.iloc[0])
 print(len(cor_time))
 cor_time.plot()
-plt.show()
 plt.savefig(Path(graph_dir) / "corr_in_time.png")
+plt.show()
 
 
 for tf in price_data:
     corr = price_corr(pd.DataFrame(price_data[tf]))
     sn.heatmap(corr, cmap ="YlGnBu",annot=True)
-    cp_info = f"time_frame: {tf}, period: {max_available_data[tf]}"
+    cp_info = f"time_frame_{tf}_period_{max_available_data[tf]}"
     time_info = f"start_time: {price_data[tf][list(price_data[tf].keys())[0]].index[0]}\n end_time:{price_data[tf][list(price_data[tf].keys())[0]].index[-1]}"
     plt.title(cp_info + "\n" + time_info)
     plt.savefig(Path(graph_dir) / (cp_info + ".png"))
